@@ -5,101 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M.H. Miraz | Profile</title>
     <style>
-        /* Basic Reset */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; background-color: #f0f2f5; color: #1c1e21; }
-
-        /* Header Section */
-        .header-container { background: white; padding-bottom: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        /* আগের সব স্টাইল এখানে থাকবে, শুধু নিচের নতুন স্টাইলগুলো যোগ করো */
         
-        /* কভার ফটো: এখানে তোমার ডাউনলোড করা ছবির নাম 'cover.jpg' দাও */
-        .cover-photo { 
-            width: 100%; height: 250px; 
-            background: #333 url('cover.jpg') center/cover no-repeat; 
-            border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;
-        }
+        /* Active Status Style */
+        #activeStatus { display: none; color: #31a24c; font-size: 13px; font-weight: 600; margin-top: 2px; }
+        .green-dot { width: 10px; height: 10px; background: #31a24c; border-radius: 50%; display: inline-block; border: 2px solid white; margin-left: -15px; position: relative; top: 55px; left: -10px; display: none; }
 
-        .profile-content { max-width: 900px; margin: -50px auto 0 auto; text-align: center; padding: 0 15px; }
-        
-        /* প্রোফাইল পিকচার: এখানে তোমার ডাউনলোড করা ছবির নাম 'profile.jpg' দাও */
-        .profile-pic { 
-            width: 168px; height: 168px; border-radius: 50%; border: 4px solid white; 
-            background: #ccc url('profile.jpg') center/cover no-repeat; 
-            display: inline-block; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .user-info h1 { font-size: 32px; font-weight: 700; margin-top: 10px; color: #050505; }
-        .friends-text { color: #65676b; font-size: 16px; margin-bottom: 15px; font-weight: 600; }
-
-        /* Buttons Style */
-        .btn-container { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
-        .btn-blue { background: #1877f2; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 15px; }
-        .btn-gray { background: #e4e6eb; color: #050505; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 15px; }
-        .btn-blue:hover { background: #166fe5; }
-        .btn-gray:hover { background: #d8dadf; }
-
-        /* Bio Section */
-        .bio-section { margin: 20px 0; border-top: 1px solid #ced4da; padding-top: 20px; }
-        .bio-text { font-size: 16px; line-height: 1.4; color: #050505; white-space: pre-line; margin-bottom: 15px; }
-        .intro-details { text-align: left; max-width: 450px; margin: 0 auto; font-size: 15px; color: #050505; }
-        .intro-details p { margin: 10px 0; display: flex; align-items: center; gap: 12px; }
-
-        /* Messenger UI */
-        #chatBox { 
-            display:none; position: fixed; bottom: 20px; right: 20px; width: 330px; 
-            background: white; border-radius: 10px; box-shadow: 0 12px 28px rgba(0,0,0,0.25); z-index: 1000; overflow: hidden;
-        }
-        .chat-header { background: #0084ff; color: white; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        #messages { height: 320px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #ffffff; }
-        .msg { padding: 8px 14px; border-radius: 20px; font-size: 14px; max-width: 85%; word-wrap: break-word; }
-        .sent { background: #0084ff; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .received { background: #e4e6eb; color: black; align-self: flex-start; border-bottom-left-radius: 4px; }
-        .chat-input { padding: 12px; border-top: 1px solid #dee2e6; display: flex; gap: 8px; align-items: center; }
-        .chat-input input { flex: 1; border: 1px solid #ddd; padding: 10px 15px; border-radius: 25px; outline: none; background: #f0f2f5; }
-        .send-btn { border:none; background:none; color:#0084ff; font-weight:bold; cursor:pointer; font-size: 15px; }
+        /* Messenger Top Profile Icon */
+        #chatProfilePic { width: 24px; height: 24px; border-radius: 50%; background: #ccc; margin-right: 8px; display: none; object-fit: cover; }
+        .chat-header-info { display: flex; align-items: center; }
     </style>
 </head>
 <body>
 
     <div class="header-container">
-        <div class="cover-photo"></div>
-
+        <div class="cover-photo" style="background-image: url('cover.jpg');"></div>
         <div class="profile-content">
-            <div class="profile-pic"></div>
+            <div style="position: relative; display: inline-block;">
+                <div class="profile-pic" style="background-image: url('profile.jpg');"></div>
+                <div id="statusDot" class="green-dot"></div>
+            </div>
             
             <div class="user-info">
                 <h1>M.H. Miřãz</h1>
-                <div class="friends-text">288 Friends • 2 mutual</div>
+                <div id="activeStatus">● Active Now</div>
+                <div id="friendCountText" class="friends-text">288 Friends • 2 mutual</div>
             </div>
 
             <div class="btn-container">
                 <button class="btn-blue" id="friendBtn" onclick="sendFriendRequest()">+ ফ্রেন্ড যোগ করুন</button>
                 <button class="btn-gray" onclick="openChat()">📩 মেসেজ পাঠান</button>
-                <button class="btn-gray">•••</button>
             </div>
-
-            <div class="bio-section">
-                <div class="bio-text">
-                    ﷽<br>Life is a Book<br>where<br>Every day is a page🌸<br>Every month is a chapter🌸<br>Every year is a series🌸<br>﷽
-                </div>
-
-                <div class="intro-details">
-                    <p>🏠 Lives in <b>Rangpur</b></p>
-                    <p>🎓 Student</p>
-                    <p>🏫 <b>Lions School and College, Rangpur</b></p>
-                </div>
             </div>
-        </div>
     </div>
 
     <div id="chatBox">
         <div class="chat-header">
-            <span>M.H. Miraz</span>
+            <div class="chat-header-info">
+                <img id="chatProfilePic" src="profile.jpg" alt="P"> <span>M.H. Miraz</span>
+            </div>
             <button onclick="closeChat()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">&times;</button>
         </div>
-        <div id="messages">
-            <div class="msg received">হাই! কেমন আছেন? আমাকে এখানে মেসেজ দিতে পারেন।</div>
-        </div>
+        <div id="messages"></div>
         <div class="chat-input">
             <input type="text" id="userInput" placeholder="Aa" onkeypress="if(event.key==='Enter') sendMessage()">
             <button class="send-btn" onclick="sendMessage()">Send</button>
@@ -107,46 +54,50 @@
     </div>
 
     <script>
-    // তোমার বট টোকেন এবং চ্যাট আইডি আমি এখানে সেট করে দিয়েছি
-    const botToken = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
-    const chatId = '7767412329'; // তোমার পার্সোনাল আইডি
+        const botToken = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
+        const chatId = '7767412329';
 
-    function openChat() { document.getElementById('chatBox').style.display = 'block'; }
-    function closeChat() { document.getElementById('chatBox').style.display = 'none'; }
-
-    async function sendMessage() {
-        const input = document.getElementById('userInput');
-        const msg = input.value.trim();
-        if(!msg) return;
-
-        // ওয়েবসাইটে মেসেজ দেখানো
-        const msgDiv = document.getElementById('messages');
-        msgDiv.innerHTML += `<div class="msg sent">${msg}</div>`;
-        input.value = '';
-        msgDiv.scrollTop = msgDiv.scrollHeight;
-
-        // টেলিগ্রামে মেসেজ পাঠানো
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent('💬 Miraz, নতুন মেসেজ: ' + msg)}`;
-        
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            if(data.ok) {
-                console.log("টেলিগ্রামে মেসেজ চলে গেছে!");
-            } else {
-                console.error("টেলিগ্রাম এরর:", data.description);
-            }
-        } catch (e) {
-            console.error("নেটওয়ার্ক এরর:", e);
+        // ১. ফ্রেন্ড হলে যা যা পরিবর্তন হবে তার ফাংশন
+        function makeActive() {
+            document.getElementById('friendBtn').innerText = '✓ Friends';
+            document.getElementById('friendBtn').classList.replace('btn-blue', 'btn-gray');
+            document.getElementById('activeStatus').style.display = 'block'; // Active Now দেখাবে
+            document.getElementById('statusDot').style.display = 'inline-block'; // সবুজ ডট দেখাবে
+            document.getElementById('chatProfilePic').style.display = 'inline-block'; // মেসেঞ্জারে ছবি দেখাবে
+            document.getElementById('friendCountText').innerText = '289 Friends • 2 mutual'; // ফ্রেন্ড সংখ্যা ১ বাড়বে
         }
 
-        // রিপ্লাই চেক করা শুরু
-        if(!window.replyInterval) startCheckingReplies();
-    }
+        // পেজ লোড হওয়ার সময় চেক
+        window.onload = function() {
+            if(localStorage.getItem('isFriend') === 'true') {
+                makeActive();
+            }
+        };
 
-    let lastUpdateId = 0;
-    function startCheckingReplies() {
-        window.replyInterval = setInterval(async () => {
+        // ২. ফ্রেন্ড রিকোয়েস্ট পাঠানো
+        async function sendFriendRequest() {
+            const btn = document.getElementById('friendBtn');
+            if(btn.innerText === '✓ Friends') return;
+            btn.innerText = 'Requested...';
+            
+            const data = {
+                chat_id: chatId,
+                text: "🔔 Miraz, কেউ আপনাকে ফ্রেন্ড রিকোয়েস্ট পাঠিয়েছে!",
+                reply_markup: {
+                    inline_keyboard: [[{ text: "✅ Approve Request", callback_data: "approve_friend" }]]
+                }
+            };
+
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
+
+        // ৩. টেলিগ্রাম থেকে আপডেট চেক করা
+        let lastUpdateId = 0;
+        setInterval(async () => {
             try {
                 const response = await fetch(`https://api.telegram.org/bot${botToken}/getUpdates?offset=${lastUpdateId + 1}`);
                 const data = await response.json();
@@ -154,17 +105,39 @@
                 if (data.result && data.result.length > 0) {
                     data.result.forEach(update => {
                         lastUpdateId = update.update_id;
-                        const text = update.message.text;
-                        
-                        // তুমি টেলিগ্রাম থেকে যা লিখবে তা ওয়েবসাইটে দেখাবে (যদি তাতে '💬' না থাকে)
-                        if (text && !text.includes("💬")) {
+
+                        // Approve বাটন ক্লিক করলে
+                        if (update.callback_query && update.callback_query.data === "approve_friend") {
+                            localStorage.setItem('isFriend', 'true');
+                            makeActive(); // সাথে সাথে এক্টিভ স্ট্যাটাস অন হবে
+                            
+                            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=✅ আপনি ফ্রেন্ড রিকোয়েস্ট এপ্রুভ করেছেন!`);
+                        }
+
+                        // মেসেজ রিসিভ করা
+                        if (update.message && update.message.text && !update.message.text.includes("💬")) {
                             const msgDiv = document.getElementById('messages');
-                            msgDiv.innerHTML += `<div class="msg received">${text}</div>`;
+                            msgDiv.innerHTML += `<div class="msg received">${update.message.text}</div>`;
                             msgDiv.scrollTop = msgDiv.scrollHeight;
                         }
                     });
                 }
-            } catch (err) { console.log("রিপ্লাই চেক করতে সমস্যা:", err); }
-        }, 3000); // প্রতি ৩ সেকেন্ড পর পর নতুন মেসেজ চেক করবে
-    }
-</script>
+            } catch (err) { console.log(err); }
+        }, 3000);
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const msg = input.value.trim();
+            if(!msg) return;
+            const msgDiv = document.getElementById('messages');
+            msgDiv.innerHTML += `<div class="msg sent">${msg}</div>`;
+            input.value = '';
+            msgDiv.scrollTop = msgDiv.scrollHeight;
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent('💬 নতুন মেসেজ: ' + msg)}`);
+        }
+
+        function openChat() { document.getElementById('chatBox').style.display = 'block'; }
+        function closeChat() { document.getElementById('chatBox').style.display = 'none'; }
+    </script>
+</body>
+</html>
