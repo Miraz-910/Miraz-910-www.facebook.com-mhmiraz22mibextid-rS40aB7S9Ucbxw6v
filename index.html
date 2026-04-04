@@ -2,70 +2,78 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>M.H. Miraz | Profile</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; }
-
-        /* Header */
+        /* আগের সব প্রোফাইল স্টাইল একই থাকবে */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f0f2f5; }
         .header { background: white; padding-bottom: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); text-align: center; }
-        .cover { width: 100%; height: 200px; background: #ddd url('cover.jpg') center/cover; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
-        
-        /* Profile Pic & Status */
-        .profile-container { position: relative; display: inline-block; margin-top: -60px; }
-        .profile-pic { width: 150px; height: 150px; border-radius: 50%; border: 4px solid white; background: #ccc url('profile.jpg') center/cover; }
-        .status-dot { width: 14px; height: 14px; background: #31a24c; border-radius: 50%; border: 2px solid white; position: absolute; bottom: 15px; right: 15px; display: none; }
+        .cover { width: 100%; height: 180px; background: #ddd url('cover.jpg') center/cover; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+        .profile-pic { width: 140px; height: 140px; border-radius: 50%; border: 4px solid white; background: #ccc url('profile.jpg') center/cover; margin-top: -70px; display: inline-block; }
+        .btns { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
+        .btn-b { background: #1877f2; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .btn-g { background: #e4e6eb; color: black; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
 
-        .name-box h1 { font-size: 28px; font-weight: bold; margin-top: 10px; }
-        .active-now { color: #31a24c; font-size: 14px; font-weight: 600; display: none; }
-        .friends-text { color: #65676b; font-size: 15px; margin: 5px 0; }
-
-        /* Buttons */
-        .btns { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
-        .btn-b { background: #1877f2; color: white; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .btn-g { background: #e4e6eb; color: black; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-
-        /* Messenger */
-        #chatBox { display:none; position: fixed; bottom: 15px; right: 15px; width: 300px; background: white; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 100; overflow: hidden; }
-        .chat-h { background: #0084ff; color: white; padding: 10px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; }
-        .chat-h img { width: 25px; height: 25px; border-radius: 50%; display: none; margin-right: 8px; vertical-align: middle; }
-        #msgs { height: 250px; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .m { padding: 7px 12px; border-radius: 15px; font-size: 14px; max-width: 80%; }
+        /* Messenger Full Screen UI */
+        #chatBox { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; flex-direction: column; }
+        .chat-h { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+        #msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .m { padding: 8px 14px; border-radius: 18px; font-size: 15px; max-width: 75%; }
         .s { background: #0084ff; color: white; align-self: flex-end; }
-        .r { background: #e4e6eb; color: black; align-self: flex-start; }
-        .inp { padding: 10px; border-top: 1px solid #ddd; display: flex; }
-        .inp input { flex: 1; border: 1px solid #ddd; padding: 7px; border-radius: 20px; outline: none; }
+        .r { background: #f1f0f0; color: black; align-self: flex-start; }
+
+        /* Input Bar with File & Emoji */
+        .inp-bar { padding: 10px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #eee; background: white; }
+        .inp-bar input[type="text"] { flex: 1; border: none; background: #f0f2f5; padding: 10px 15px; border-radius: 20px; outline: none; }
+        .icon-btn { color: #0084ff; font-size: 22px; cursor: pointer; }
+        
+        /* Emoji Mini Panel */
+        #emojiBox { display: none; padding: 10px; background: #f9f9f9; border-top: 1px solid #eee; display: flex; gap: 10px; overflow-x: auto; }
+        .emoji-item { cursor: pointer; font-size: 20px; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="cover"></div>
-        <div class="profile-container">
-            <div class="profile-pic"></div>
-            <div id="statusDot" class="status-dot"></div>
-        </div>
-        <div class="name-box">
-            <h1>M.H. Miřãz</h1>
-            <div id="activeNow" class="active-now">● Active Now</div>
-            <p class="friends-text">288 Friends • 2 mutual</p>
-        </div>
+        <div class="profile-pic"></div>
+        <h1 style="margin-top:10px;">M.H. Miřãz</h1>
         <div class="btns">
-            <button id="friendBtn" class="btn-b" onclick="sendReq()">+ ফ্রেন্ড যোগ করুন</button>
-            <button class="btn-g" onclick="showChat()">📩 মেসেজ পাঠান</button>
+            <button id="friendBtn" class="btn-b" onclick="sendReq()">+ Add Friend</button>
+            <button class="btn-g" onclick="showChat()">📩 Message</button>
         </div>
     </div>
 
     <div id="chatBox">
         <div class="chat-h">
-            <div><img id="chatImg" src="profile.jpg"> M.H. Miraz</div>
-            <span style="cursor:pointer" onclick="hideChat()">&times;</span>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:24px; color:#0084ff;" onclick="hideChat()">←</span>
+                <img src="profile.jpg" style="width:35px; height:35px; border-radius:50%;">
+                <span style="font-weight:bold;">M.H. Miraz</span>
+            </div>
+            <div style="color:#0084ff; font-size:20px;">📞 &nbsp; 📹</div>
         </div>
+        
         <div id="msgs"></div>
-        <div class="inp">
+
+        <div id="emojiBox">
+            <span class="emoji-item" onclick="addEmoji('❤️')">❤️</span>
+            <span class="emoji-item" onclick="addEmoji('😂')">😂</span>
+            <span class="emoji-item" onclick="addEmoji('😮')">😮</span>
+            <span class="emoji-item" onclick="addEmoji('🔥')">🔥</span>
+            <span class="emoji-item" onclick="addEmoji('🌸')">🌸</span>
+            <span class="emoji-item" onclick="addEmoji('👍')">👍</span>
+        </div>
+
+        <div class="inp-bar">
+            <label for="fileInp" class="icon-btn">📁</label>
+            <input type="file" id="fileInp" style="display:none;" onchange="sendFile()">
+            
+            <span class="icon-btn" onclick="toggleEmoji()">😊</span>
+            
             <input type="text" id="uInp" placeholder="Aa" onkeypress="if(event.key==='Enter') sendM()">
-            <button onclick="sendM()" style="border:none; background:none; color:#0084ff; font-weight:bold; margin-left:5px;">Send</button>
+            <span class="icon-btn" onclick="sendM()">➤</span>
         </div>
     </div>
 
@@ -73,59 +81,65 @@
         const token = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
         const cid = '7767412329';
 
-        function applyFriend() {
-            document.getElementById('friendBtn').innerText = '✓ Friends';
-            document.getElementById('friendBtn').className = 'btn-g';
-            document.getElementById('activeNow').style.display = 'block';
-            document.getElementById('statusDot').style.display = 'block';
-            document.getElementById('chatImg').style.display = 'inline-block';
-        }
-
-        if(localStorage.getItem('isF') === 'true') applyFriend();
-
-        async function sendReq() {
-            const b = document.getElementById('friendBtn');
-            if(b.innerText === '✓ Friends') return;
-            b.innerText = 'Requested...';
-            
-            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: cid, text: "🔔 Miraz, নতুন রিকোয়েস্ট!",
-                    reply_markup: { inline_keyboard: [[{ text: "Approve", callback_data: "ok_f" }]] }
-                })
-            });
-        }
-
-        function showChat() { document.getElementById('chatBox').style.display = 'block'; }
+        function showChat() { document.getElementById('chatBox').style.display = 'flex'; }
         function hideChat() { document.getElementById('chatBox').style.display = 'none'; }
+        function toggleEmoji() { 
+            const eb = document.getElementById('emojiBox');
+            eb.style.display = (eb.style.display === 'flex') ? 'none' : 'flex';
+        }
+        function addEmoji(e) { document.getElementById('uInp').value += e; }
 
+        // ১. টেক্সট মেসেজ পাঠানো
         async function sendM() {
             const i = document.getElementById('uInp');
             const v = i.value.trim();
             if(!v) return;
-            document.getElementById('msgs').innerHTML += `<div class="m s">${v}</div>`;
+            addMsg(v, 's');
             i.value = '';
             await fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${cid}&text=${encodeURIComponent('💬 '+v)}`);
         }
 
+        // ২. ফাইল/ছবি পাঠানো (টেলিগ্রামে যাবে)
+        async function sendFile() {
+            const fileInput = document.getElementById('fileInp');
+            const file = fileInput.files[0];
+            if(!file) return;
+
+            addMsg("Sending file...", 's');
+            const formData = new FormData();
+            formData.append('chat_id', cid);
+            formData.append('document', file);
+
+            try {
+                await fetch(`https://api.telegram.org/bot${token}/sendDocument`, {
+                    method: 'POST',
+                    body: formData
+                });
+                addMsg("✅ File Sent to Miraz", 's');
+            } catch (e) { alert("ফাইল পাঠাতে সমস্যা হয়েছে।"); }
+        }
+
+        function addMsg(t, type) {
+            const m = document.getElementById('msgs');
+            m.innerHTML += `<div class="m ${type}">${t}</div>`;
+            m.scrollTop = m.scrollHeight;
+        }
+
+        // ৩. টেলিগ্রাম থেকে মেসেজ রিসিভ করা
         let lastId = 0;
         setInterval(async () => {
-            const r = await fetch(`https://api.telegram.org/bot${token}/getUpdates?offset=${lastId + 1}`);
-            const d = await r.json();
-            if (d.result) {
-                d.result.forEach(u => {
-                    lastId = u.update_id;
-                    if (u.callback_query && u.callback_query.data === "ok_f") {
-                        localStorage.setItem('isF', 'true');
-                        applyFriend();
-                    }
-                    if (u.message && u.message.text && !u.message.text.includes("💬")) {
-                        document.getElementById('msgs').innerHTML += `<div class="m r">${u.message.text}</div>`;
-                    }
-                });
-            }
+            try {
+                const r = await fetch(`https://api.telegram.org/bot${token}/getUpdates?offset=${lastId + 1}`);
+                const d = await r.json();
+                if (d.result) {
+                    d.result.forEach(u => {
+                        lastId = u.update_id;
+                        if (u.message && u.message.text && !u.message.text.includes("💬")) {
+                            addMsg(u.message.text, 'r');
+                        }
+                    });
+                }
+            } catch(e){}
         }, 3000);
     </script>
 </body>
