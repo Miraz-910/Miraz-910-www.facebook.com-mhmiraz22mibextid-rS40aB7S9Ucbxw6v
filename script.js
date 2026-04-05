@@ -1,33 +1,50 @@
-function showMessenger() {
-    document.getElementById('profile-screen').style.display = 'none';
-    document.getElementById('messenger-screen').style.display = 'flex';
+// এই স্ক্রিপ্টটি তোমার আগের HTML-এর ভেতরে <script> ট্যাগে বসবে
+
+// Firebase Configuration (তোমার নিজেরটা বসাও)
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  databaseURL: "https://your-project-id.firebaseio.com",
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ১. বট থেকে এপ্রুভাল চেক করা
+db.ref('status/friendRequest').on('value', (snapshot) => {
+    const status = snapshot.val();
+    const btn = document.getElementById('addFriendBtn');
+    if(status === 'approved') {
+        btn.innerHTML = '<i class="fas fa-user-check"></i> Friends';
+        btn.className = 'btn btn-gray';
+    } else if (status === 'rejected') {
+        btn.innerHTML = '<i class="fas fa-user-plus"></i> Add Friend';
+    }
+});
+
+// ২. চ্যাট মেসেজ পাঠানো (User to Bot)
+function sendMessage() {
+    const input = document.querySelector('.msgr-in');
+    const msg = input.value;
+    if(msg.trim() !== "") {
+        // ইউজার স্ক্রিনে মেসেজ দেখাও
+        appendMessage(msg, 'sent');
+        // টেলিগ্রাম বটে পাঠাও
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=User: ${msg}`);
+        input.value = "";
+    }
 }
 
-function showProfile() {
-    document.getElementById('messenger-screen').style.display = 'none';
-    document.getElementById('profile-screen').style.display = 'block';
-}
+// ৩. বটের রিপ্লাই রিসিভ করা (Bot to User)
+db.ref('chat/reply').on('value', (snapshot) => {
+    const reply = snapshot.val();
+    if(reply) {
+        appendMessage(reply, 'received');
+    }
+});
 
-function handleInput() {
-    const val = document.getElementById('msg-input').value;
-    document.getElementById('like-icon').style.display = val ? 'none' : 'block';
-    document.getElementById('send-icon').style.display = val ? 'block' : 'none';
-}
-
-async function sendMsg(text) {
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-    document.getElementById('chat-time').innerText = time;
-    document.getElementById('bubble-text').innerText = text;
-    document.getElementById('msg-wrapper').style.display = 'block';
-    document.getElementById('suggestions').style.display = 'none';
-    
-    // Vercel API-তে মেসেজ পাঠানো
-    await fetch(`/api/send-message?message=${encodeURIComponent(text)}`);
-}
-
-function sendManual() {
-    const input = document.getElementById('msg-input');
-    sendMsg(input.value);
-    input.value = '';
-    handleInput();
+function appendMessage(text, type) {
+    const chatBody = document.getElementById('msgs');
+    const div = document.createElement('div');
+    div.className = type === 'sent' ? 'msg-sent' : 'msg-received';
+    div.innerText = text;
+    chatBody.appendChild(div);
 }
